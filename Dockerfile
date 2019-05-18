@@ -9,5 +9,5 @@ RUN apk add git
 
 RUN mkdir -p ~/.ssh
 
-RUN printf "Host *\n\tStrictHostKeyChecking no\nHost gitlab.azsofts.com\n\tHostName gitlab.azsofts.com\n\tUser gitlabci\n\tIdentityFile /root/.ssh/gitlab_gitlabci_private" > ~/.ssh/config
+RUN printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 
