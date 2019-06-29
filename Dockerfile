@@ -2,23 +2,23 @@
 FROM openjdk:8-jdk-alpine
 
 # Install any needed packages specified in requirements.txt
-RUN apk update && apk add openssh-client 
+RUN apk update && apk add --no-cache --update openssh-client 
 
 # Install git
-RUN apk add git
+RUN apk add --no-cache --update git
 
 RUN mkdir -p ~/.ssh
 
 RUN printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 
     ## Install 3rd tools
-RUN apk add jq  
+RUN apk add --no-cache --update jq  
 # RUN apk add python
 
 ######################
 # Install Python 3.7
 #######################
-RUN apk add linux-headers 
+RUN apk add --no-cache --update linux-headers 
 # Update & Install dependencies
 RUN apk add --no-cache --update \
     git \
@@ -51,6 +51,6 @@ RUN pip install --upgrade pip && pyenv rehash
 RUN rm -rf ~/.cache/pip
 
 ###############
-RUN apk add bash
-RUN apk add curl
+RUN apk add --no-cache --update bash
+RUN apk add --no-cache --update curl
 RUN curl -sSL https://sdk.cloud.google.com > /tmp/gcl && chmod +x /tmp/gcl && bash /tmp/gcl --install-dir=/tmp/gcloud --disable-prompts
