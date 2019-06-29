@@ -11,46 +11,28 @@ RUN mkdir -p ~/.ssh
 
 RUN printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 
-    ## Install 3rd tools
+## Install 3rd tools
 RUN apk add --no-cache --update jq  
-# RUN apk add python
-
-######################
-# Install Python 3.7
-#######################
-RUN apk add --no-cache --update linux-headers 
-# Update & Install dependencies
-RUN apk add --no-cache --update \
-    git \
-    bash \
-    libffi-dev \
-    openssl-dev \
-    bzip2-dev \
-    zlib-dev \
-    readline-dev \
-    sqlite-dev \
-    build-base \
-    py-pip
-
-# Set Python version
-ARG PYTHON_VERSION='3.7.0'
-# Set pyenv home
-ARG PYENV_HOME=/root/.pyenv
-
-# Install pyenv, then install python versions
-RUN git clone --depth 1 https://github.com/pyenv/pyenv.git $PYENV_HOME && \
-    rm -rfv $PYENV_HOME/.git
-
-ENV PATH $PYENV_HOME/shims:$PYENV_HOME/bin:$PATH
-
-RUN pyenv install $PYTHON_VERSION
-RUN pyenv global $PYTHON_VERSION
-RUN pip install --upgrade pip && pyenv rehash
-
-# Clean
-RUN rm -rf ~/.cache/pip
-
-###############
 RUN apk add --no-cache --update bash
 RUN apk add --no-cache --update curl
-RUN curl -sSL https://sdk.cloud.google.com > /tmp/gcl && chmod +x /tmp/gcl && bash /tmp/gcl --install-dir=/tmp/gcloud --disable-prompts
+
+ARG CLOUD_SDK_VERSION=252.0.0
+ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION
+
+ENV PATH /google-cloud-sdk/bin:$PATH
+RUN apk --no-cache add \
+        curl \
+        python \
+        py-crcmod \
+        bash \
+        libc6-compat \
+        gnupg \
+    && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    ln -s /lib /lib64 && \
+    gcloud config set core/disable_usage_reporting true && \
+    gcloud config set component_manager/disable_update_check true && \
+    gcloud config set metrics/environment github_docker_image && \
+    gcloud --version
+VOLUME ["/root/.config"]
