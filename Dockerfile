@@ -11,3 +11,9 @@ RUN mkdir -p ~/.ssh
 
 RUN printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 
+    ## Install 3rd tools
+RUN apk add jq  
+RUN apk add python
+RUN apk add bash
+RUN apk add curl
+RUN curl -sSL https://sdk.cloud.google.com > /tmp/gcl && chmod +x /tmp/gcl && bash /tmp/gcl --install-dir=/tmp/gcloud --disable-prompts
