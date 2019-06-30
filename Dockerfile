@@ -1,5 +1,7 @@
 # Use an official Python runtime as a parent image
-FROM openjdk:8-jdk-alpine
+#FROM openjdk:8-jdk-alpine
+FROM google/cloud-sdk:alpine
+RUN apk --update add openjdk8-jre
 
 # Install any needed packages specified in requirements.txt
 RUN apk update && apk add --no-cache --update openssh-client 
